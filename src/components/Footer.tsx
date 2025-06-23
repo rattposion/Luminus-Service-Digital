@@ -93,7 +93,7 @@ const Footer = () => {
                   className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
                 >
                   <Phone className="w-5 h-5" />
-                  <span>+55 (11) 99999-9999</span>
+                  <span>+55 (61) 99999-9999</span>
                 </motion.div>
                 
                 <motion.div
@@ -101,7 +101,7 @@ const Footer = () => {
                   className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
                 >
                   <MapPin className="w-5 h-5" />
-                  <span>São Paulo, SP - Brasil</span>
+                  <span>Brasília, DF - Brasil</span>
                 </motion.div>
               </div>
             </motion.div>

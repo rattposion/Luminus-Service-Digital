@@ -148,7 +148,7 @@ const CTASection = () => {
                 <Phone className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">WhatsApp</h3>
-              <p className="text-purple-400">+55 (11) 99999-9999</p>
+              <p className="text-purple-400">+55 (61) 99999-9999</p>
               <p className="text-gray-400 text-sm mt-1">Atendimento 24/7</p>
             </motion.div>
           </motion.div>

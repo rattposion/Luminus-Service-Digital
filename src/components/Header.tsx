@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Header = () => {
+  const [header, setHeader] = useState({ logo: '', titulo: '', links: [] });
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${API_URL}/header`).then(res => setHeader(res.data));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,14 +21,6 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const navItems = [
-    { name: 'Início', href: '#hero' },
-    { name: 'Sobre', href: '#about' },
-    { name: 'Serviços', href: '#services' },
-    { name: 'Projetos', href: '#projects' },
-    { name: 'Contato', href: '#contact' }
-  ];
 
   return (
     <motion.header
@@ -37,26 +37,30 @@ const Header = () => {
             className="flex items-center space-x-2"
           >
             <div className="relative">
-              <Zap className="w-8 h-8 text-purple-400" />
+              {header.logo ? (
+                <img src={header.logo} alt="Logo" className="w-8 h-8 object-contain" />
+              ) : (
+                <Zap className="w-8 h-8 text-purple-400" />
+              )}
               <div className="absolute inset-0 w-8 h-8 bg-purple-400 rounded-full blur-lg opacity-30"></div>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-              Luminus
+              {header.titulo || 'Luminus'}
             </span>
           </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
+            {header.links && header.links.map((item, index) => (
               <motion.a
-                key={item.name}
-                href={item.href}
+                key={item.label + index}
+                href={item.url}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className="text-gray-300 hover:text-purple-400 transition-colors duration-300 relative group"
               >
-                {item.name}
+                {item.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-600 group-hover:w-full transition-all duration-300"></span>
               </motion.a>
             ))}
@@ -87,17 +91,17 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden mt-4 pb-4 border-t border-purple-500/20"
           >
-            {navItems.map((item, index) => (
+            {header.links && header.links.map((item, index) => (
               <motion.a
-                key={item.name}
-                href={item.href}
+                key={item.label + index}
+                href={item.url}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setIsOpen(false)}
                 className="block py-2 text-gray-300 hover:text-purple-400 transition-colors duration-300"
               >
-                {item.name}
+                {item.label}
               </motion.a>
             ))}
             <motion.button

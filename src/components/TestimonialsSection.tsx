@@ -1,48 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
+import axios from 'axios';
 
 const TestimonialsSection = () => {
+  const [testimonials, setTestimonials] = useState([]);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Carlos Rodriguez',
-      position: 'CEO, TechStart Solutions',
-      company: 'TechStart',
-      content: 'A Luminus transformou completamente nossa presença digital. Em apenas 6 meses, nosso faturamento online aumentou 400%. A equipe é extremamente profissional e os resultados falam por si.',
-      rating: 5,
-      avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150'
-    },
-    {
-      id: 2,
-      name: 'Marina Santos',
-      position: 'Diretora de Marketing, Fashion Hub',
-      company: 'Fashion Hub',
-      content: 'Trabalhar com a Luminus foi uma das melhores decisões que tomamos. Eles não apenas criaram uma loja virtual incrível, mas também desenvolveram uma estratégia de marketing que triplicou nossas vendas.',
-      rating: 5,
-      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150'
-    },
-    {
-      id: 3,
-      name: 'Roberto Lima',
-      position: 'Fundador, FitLife Academy',
-      company: 'FitLife',
-      content: 'O aplicativo que a Luminus desenvolveu para nossa academia revolucionou nossa operação. A interface é intuitiva, as funcionalidades são perfeitas e nossos alunos adoraram a experiência.',
-      rating: 5,
-      avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150'
-    },
-    {
-      id: 4,
-      name: 'Ana Paula Costa',
-      position: 'Proprietária, Doce Sabor',
-      company: 'Doce Sabor',
-      content: 'Desde que implementamos as estratégias da Luminus, nosso delivery cresceu 250%. O sistema de pedidos online é fantástico e o suporte é excepcional. Recomendo de olhos fechados!',
-      rating: 5,
-      avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=150'
-    }
-  ];
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    axios.get(`${API_URL}/depoimentos`).then(res => setTestimonials(res.data));
+  }, []);
 
   // Auto-play functionality
   useEffect(() => {
@@ -134,7 +103,7 @@ const TestimonialsSection = () => {
                   transition={{ delay: 0.2 }}
                   className="flex justify-center mb-6"
                 >
-                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                  {[...Array(testimonials[currentTestimonial]?.rating)].map((_, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, scale: 0 }}
@@ -153,7 +122,7 @@ const TestimonialsSection = () => {
                   transition={{ delay: 0.4 }}
                   className="text-xl md:text-2xl text-gray-200 text-center mb-8 leading-relaxed italic font-light"
                 >
-                  "{testimonials[currentTestimonial].content}"
+                  "{testimonials[currentTestimonial]?.content}"
                 </motion.blockquote>
 
                 {/* Author Info */}
@@ -165,8 +134,8 @@ const TestimonialsSection = () => {
                 >
                   <div className="relative">
                     <img
-                      src={testimonials[currentTestimonial].avatar}
-                      alt={testimonials[currentTestimonial].name}
+                      src={testimonials[currentTestimonial]?.avatar}
+                      alt={testimonials[currentTestimonial]?.name}
                       className="w-16 h-16 rounded-full object-cover border-2 border-purple-500/30"
                     />
                     <div className="absolute inset-0 w-16 h-16 bg-purple-500/20 rounded-full blur-md"></div>
@@ -174,13 +143,13 @@ const TestimonialsSection = () => {
                   
                   <div className="text-center">
                     <h4 className="text-lg font-semibold text-white">
-                      {testimonials[currentTestimonial].name}
+                      {testimonials[currentTestimonial]?.name}
                     </h4>
                     <p className="text-purple-400 text-sm">
-                      {testimonials[currentTestimonial].position}
+                      {testimonials[currentTestimonial]?.position}
                     </p>
                     <p className="text-gray-500 text-sm">
-                      {testimonials[currentTestimonial].company}
+                      {testimonials[currentTestimonial]?.company}
                     </p>
                   </div>
                 </motion.div>

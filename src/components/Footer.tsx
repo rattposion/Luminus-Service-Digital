@@ -11,20 +11,19 @@ import {
   Twitter,
   ArrowUp
 } from 'lucide-react';
+import axios from 'axios';
 
 const Footer = () => {
+  const [footer, setFooter] = React.useState({ text: '', contacts: [], socials: [], services: [], companyLinks: [] });
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  React.useEffect(() => {
+    axios.get(`${API_URL}/footer`).then(res => setFooter(res.data));
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const services = [
-    'Tráfego Pago',
-    'Social Media',
-    'Desenvolvimento Web',
-    'E-commerce',
-    'SEO & Analytics',
-    'Consultoria Digital'
-  ];
 
   const company = [
     'Sobre Nós',
@@ -73,36 +72,21 @@ const Footer = () => {
               </div>
 
               <p className="text-gray-400 mb-6 leading-relaxed max-w-md">
-                Transformamos ideias em experiências digitais extraordinárias. 
-                Especialistas em marketing digital e desenvolvimento fullstack, 
-                criamos soluções que impulsionam o crescimento do seu negócio.
+                {footer.text}
               </p>
 
               {/* Contact Info */}
               <div className="space-y-3">
-                <motion.div
-                  whileHover={{ x: 5 }}
-                  className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                >
-                  <Mail className="w-5 h-5" />
-                  <span>contato@luminusdigital.com</span>
-                </motion.div>
-                
-                <motion.div
-                  whileHover={{ x: 5 }}
-                  className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                >
-                  <Phone className="w-5 h-5" />
-                  <span>+55 (61) 99999-9999</span>
-                </motion.div>
-                
-                <motion.div
-                  whileHover={{ x: 5 }}
-                  className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                >
-                  <MapPin className="w-5 h-5" />
-                  <span>Brasília, DF - Brasil</span>
-                </motion.div>
+                {footer.contacts.map((contact, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center space-x-3 text-gray-400 hover:text-purple-400 transition-colors duration-300"
+                  >
+                    {contact.icon && <contact.icon className="w-5 h-5" />}
+                    <span>{contact.text}</span>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
 
@@ -115,7 +99,7 @@ const Footer = () => {
             >
               <h3 className="text-lg font-semibold text-white mb-6">Serviços</h3>
               <ul className="space-y-3">
-                {services.map((service, index) => (
+                {footer.services.map((service, index) => (
                   <motion.li
                     key={service}
                     initial={{ opacity: 0, x: -10 }}
@@ -143,7 +127,7 @@ const Footer = () => {
             >
               <h3 className="text-lg font-semibold text-white mb-6">Empresa</h3>
               <ul className="space-y-3">
-                {company.map((item, index) => (
+                {footer.companyLinks.map((item, index) => (
                   <motion.li
                     key={item}
                     initial={{ opacity: 0, x: -10 }}

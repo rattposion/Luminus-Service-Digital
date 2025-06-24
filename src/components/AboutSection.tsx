@@ -1,30 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Target, Users, Award, TrendingUp } from 'lucide-react';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const AboutSection = () => {
-  const features = [
-    {
-      icon: Target,
-      title: 'Foco em Resultados',
-      description: 'Estratégias data-driven para maximizar ROI e conversões'
-    },
-    {
-      icon: Users,
-      title: 'Time Especializado',
-      description: 'Profissionais experientes em marketing e desenvolvimento'
-    },
-    {
-      icon: Award,
-      title: 'Qualidade Premium',
-      description: 'Projetos de alta qualidade com padrões internacionais'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Crescimento Acelerado',
-      description: 'Soluções que escalam junto com seu negócio'
-    }
-  ];
+  const [sobre, setSobre] = React.useState({ title: '', paragraphs: [''], features: [{ title: '', description: '' }] });
+  React.useEffect(() => {
+    axios.get(`${API_URL}/sobre`).then(res => setSobre(res.data));
+  }, []);
 
   return (
     <section id="about" className="py-20 relative overflow-hidden">
@@ -54,35 +39,25 @@ const AboutSection = () => {
               transition={{ delay: 0.3 }}
               className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
             >
-              Impulsionando o futuro digital das empresas
+              {sobre.title}
             </motion.h2>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-gray-300 text-lg mb-8 leading-relaxed"
-            >
-              Na Luminus Service Digital, combinamos criatividade, tecnologia e estratégia para criar 
-              experiências digitais que conectam marcas aos seus públicos. Nossa missão é transformar 
-              visões em realidade através de soluções inovadoras e resultados mensuráveis.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-gray-400 mb-12"
-            >
-              Com expertise em marketing digital e desenvolvimento fullstack, oferecemos soluções 
-              completas que abrangem desde a estratégia até a execução, garantindo resultados 
-              excepcionais para nossos clientes.
-            </motion.p>
+            {sobre.paragraphs && sobre.paragraphs.map((p, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.1 }}
+                className="text-gray-300 text-lg mb-8 leading-relaxed"
+              >
+                {p}
+              </motion.p>
+            ))}
 
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.5 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
@@ -99,9 +74,9 @@ const AboutSection = () => {
             viewport={{ once: true }}
             className="grid grid-cols-2 gap-6"
           >
-            {features.map((feature, index) => (
+            {sobre.features && sobre.features.map((feature, index) => (
               <motion.div
-                key={feature.title}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.1 }}
@@ -115,7 +90,7 @@ const AboutSection = () => {
                   whileHover={{ rotate: 5 }}
                   className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300"
                 >
-                  <feature.icon className="w-6 h-6 text-white" />
+                  <Target className="w-6 h-6 text-white" />
                 </motion.div>
                 
                 <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-purple-300 transition-colors duration-300">

@@ -1,8 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const HeroSection = () => {
+  const [hero, setHero] = React.useState({ title: '', subtitle: '', stats: [{ number: '', label: '' }, { number: '', label: '' }, { number: '', label: '' }] });
+  React.useEffect(() => {
+    axios.get(`${API_URL}/hero`).then(res => setHero(res.data));
+  }, []);
   const floatingAnimation = {
     y: [-10, 10, -10],
     transition: {
@@ -68,11 +75,11 @@ const HeroSection = () => {
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
             <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-              Luminus Service
+              {hero.title}
             </span>
             <br />
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-              Digital
+              {/* pode usar parte do título ou outro campo se quiser */}
             </span>
           </motion.h1>
 
@@ -83,11 +90,7 @@ const HeroSection = () => {
             transition={{ delay: 0.5, duration: 1 }}
             className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            Transformando ideias em{' '}
-            <span className="text-purple-400 font-semibold">presença digital</span>{' '}
-            de alto impacto através de{' '}
-            <span className="text-pink-400 font-semibold">marketing inteligente</span>{' '}
-            e desenvolvimento fullstack
+            {hero.subtitle}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -125,13 +128,9 @@ const HeroSection = () => {
             transition={{ delay: 0.9, duration: 1 }}
             className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto"
           >
-            {[
-              { number: '500+', label: 'Projetos' },
-              { number: '150+', label: 'Clientes' },
-              { number: '99%', label: 'Satisfação' }
-            ].map((stat, index) => (
+            {hero.stats && hero.stats.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={index}
                 animate={floatingAnimation}
                 transition={{ delay: index * 0.2 }}
                 className="text-center"

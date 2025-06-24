@@ -1,72 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
+import axios from 'axios';
 
 const ProjectsSection = () => {
+  const [projects, setProjects] = useState([]);
   const [activeCategory, setActiveCategory] = useState('todos');
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    axios.get(`${API_URL}/projetos`).then(res => setProjects(res.data));
+  }, []);
 
   const categories = [
     { id: 'todos', name: 'Todos' },
     { id: 'ecommerce', name: 'E-commerce' },
     { id: 'marketing', name: 'Marketing' },
     { id: 'webapp', name: 'Web Apps' }
-  ];
-
-  const projects = [
-    {
-      id: 1,
-      title: 'TechStore Brasil',
-      category: 'ecommerce',
-      description: 'E-commerce completo com integração de pagamentos e gestão de estoque',
-      image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['React', 'Node.js', 'Stripe', 'AWS'],
-      metrics: { sales: '+250%', conversion: '15.3%' }
-    },
-    {
-      id: 2,
-      title: 'FitLife App',
-      category: 'webapp',
-      description: 'Aplicativo web para acompanhamento de exercícios e nutrição',
-      image: 'https://images.pexels.com/photos/4474035/pexels-photo-4474035.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['Next.js', 'Firebase', 'PWA', 'Chart.js'],
-      metrics: { users: '50k+', engagement: '85%' }
-    },
-    {
-      id: 3,
-      title: 'Campanha Digital Sucesso',
-      category: 'marketing',
-      description: 'Estratégia de marketing digital que aumentou ROI em 300%',
-      image: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['Google Ads', 'Facebook Ads', 'Analytics', 'CRO'],
-      metrics: { roi: '+300%', ctr: '12.8%' }
-    },
-    {
-      id: 4,
-      title: 'RestaurantePro',
-      category: 'webapp',
-      description: 'Sistema de gestão completo para restaurantes e delivery',
-      image: 'https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['React', 'Express', 'MongoDB', 'Socket.io'],
-      metrics: { orders: '+180%', efficiency: '95%' }
-    },
-    {
-      id: 5,
-      title: 'ModaStyle',
-      category: 'ecommerce',
-      description: 'Loja virtual de moda com experiência de compra premium',
-      image: 'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['Shopify', 'Custom Theme', 'Instagram API', 'AR Try-on'],
-      metrics: { revenue: '+400%', satisfaction: '9.8/10' }
-    },
-    {
-      id: 6,
-      title: 'Lead Generation Pro',
-      category: 'marketing',
-      description: 'Funil de conversão otimizado para geração de leads B2B',
-      image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tags: ['Landing Pages', 'Email Marketing', 'CRM', 'Automation'],
-      metrics: { leads: '+500%', cost: '-60%' }
-    }
   ];
 
   const filteredProjects = activeCategory === 'todos' 

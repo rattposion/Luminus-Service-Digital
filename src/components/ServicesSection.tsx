@@ -10,46 +10,15 @@ import {
   Smartphone,
   ShoppingCart
 } from 'lucide-react';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ServicesSection = () => {
-  const services = [
-    {
-      icon: Target,
-      title: 'Tráfego Pago',
-      description: 'Google Ads, Facebook Ads e campanhas otimizadas para máximo ROI',
-      features: ['Google Ads', 'Facebook & Instagram Ads', 'LinkedIn Ads', 'Remarketing']
-    },
-    {
-      icon: Share2,
-      title: 'Social Media',
-      description: 'Gestão completa de redes sociais com conteúdo estratégico',
-      features: ['Gestão de Redes', 'Criação de Conteúdo', 'Design Gráfico', 'Influencers']
-    },
-    {
-      icon: Globe,
-      title: 'Sites & E-commerce',
-      description: 'Desenvolvimento de sites responsivos e lojas virtuais modernas',
-      features: ['Sites Responsivos', 'E-commerce', 'Landing Pages', 'PWA']
-    },
-    {
-      icon: Code,
-      title: 'Fullstack sob Medida',
-      description: 'Desenvolvimento de aplicações web e mobile personalizadas',
-      features: ['React/Next.js', 'Node.js', 'Mobile Apps', 'APIs REST']
-    },
-    {
-      icon: Search,
-      title: 'SEO & Otimizações',
-      description: 'Otimização para mecanismos de busca e performance',
-      features: ['SEO On-page', 'SEO Técnico', 'Link Building', 'Analytics']
-    },
-    {
-      icon: TrendingUp,
-      title: 'Growth Hacking',
-      description: 'Estratégias de crescimento acelerado baseadas em dados',
-      features: ['Funis de Conversão', 'A/B Testing', 'Automação', 'CRO']
-    }
-  ];
+  const [services, setServices] = React.useState([{ title: '', description: '', features: [''] }]);
+  React.useEffect(() => {
+    axios.get(`${API_URL}/servicos`).then(res => setServices(res.data));
+  }, []);
 
   return (
     <section id="services" className="py-20 relative overflow-hidden">
@@ -97,7 +66,7 @@ const ServicesSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
-              key={service.title}
+              key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.6 }}
@@ -116,7 +85,7 @@ const ServicesSection = () => {
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-all duration-300"
               >
-                <service.icon className="w-8 h-8 text-white" />
+                <Target className="w-8 h-8 text-white" />
                 <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </motion.div>
 
@@ -132,9 +101,9 @@ const ServicesSection = () => {
 
                 {/* Features List */}
                 <ul className="space-y-2 mb-6">
-                  {service.features.map((feature, featureIndex) => (
+                  {service.features && service.features.map((feature, featureIndex) => (
                     <motion.li
-                      key={feature}
+                      key={featureIndex}
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: (index * 0.1) + (featureIndex * 0.05) }}

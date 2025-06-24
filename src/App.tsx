@@ -10,8 +10,25 @@ import Footer from './components/Footer';
 import PromoBalloon from './components/PromoBalloon';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PainelAdmin from './components/PainelAdmin';
+import AdminLogin from './components/AdminLogin';
 
 function App() {
+  const [isAdmin, setIsAdmin] = React.useState(() => localStorage.getItem('admin_token') === 'logado');
+
+  const handleLogin = () => setIsAdmin(true);
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    setIsAdmin(false);
+  };
+
+  if (window.location.pathname === '/CWpainel') {
+    if (!isAdmin) return <AdminLogin onLogin={handleLogin} />;
+    return <div>
+      <div className="flex justify-end p-4"><button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded font-bold hover:bg-red-600">Sair</button></div>
+      <PainelAdmin />
+    </div>;
+  }
+
   return (
     <Router>
       <Routes>

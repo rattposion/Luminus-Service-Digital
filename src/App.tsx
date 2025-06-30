@@ -1,55 +1,93 @@
-import React from 'react';
-import Header from './components/Header';
-import HeroSection from './components/HeroSection';
-import AboutSection from './components/AboutSection';
-import ServicesSection from './components/ServicesSection';
-import ProjectsSection from './components/ProjectsSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import CTASection from './components/CTASection';
+import React, { useEffect, useState } from 'react';
+import { motion, useScroll } from 'framer-motion';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Services from './components/Services';
+import Portfolio from './components/Portfolio';
+import Testimonials from './components/Testimonials';
+import CustomQuote from './components/CustomQuote';
 import Footer from './components/Footer';
-import PromoBalloon from './components/PromoBalloon';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PainelAdmin from './components/PainelAdmin';
-import AdminLogin from './components/AdminLogin';
+import PromoModal from './components/PromoModal';
+import WhatsAppButton from './components/WhatsAppButton';
+import ParticleBackground from './components/ParticleBackground';
 
 function App() {
-  const [isAdmin, setIsAdmin] = React.useState(() => localStorage.getItem('admin_token') === 'logado');
+  const [showPromoModal, setShowPromoModal] = useState(false);
+  const [modalDismissed, setModalDismissed] = useState(false);
+  const { scrollYProgress } = useScroll();
 
-  const handleLogin = () => setIsAdmin(true);
-  const handleLogout = () => {
-    localStorage.removeItem('admin_token');
-    setIsAdmin(false);
+  useEffect(() => {
+    // Se a modal já foi dispensada, não mostrar novamente
+    if (modalDismissed) return;
+
+    const timer = setTimeout(() => {
+      setShowPromoModal(true);
+    }, 8000); // Aumentado para 8 segundos
+
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.7) {
+        setShowPromoModal(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [modalDismissed]);
+
+  const handleCloseModal = () => {
+    setShowPromoModal(false);
+    setModalDismissed(true);
   };
 
-  if (window.location.pathname === '/CWpainel') {
-    if (!isAdmin) return <AdminLogin onLogin={handleLogin} />;
-    return <div>
-      <div className="flex justify-end p-4"><button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded font-bold hover:bg-red-600">Sair</button></div>
-      <PainelAdmin />
-    </div>;
-  }
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          <>
-            <PromoBalloon />
-            <div className="bg-black text-white min-h-screen overflow-x-hidden">
-              <Header />
-              <HeroSection />
-              <AboutSection />
-              <ServicesSection />
-              <ProjectsSection />
-              <TestimonialsSection />
-              <CTASection />
-              <Footer />
-            </div>
-          </>
-        } />
-        <Route path="/CWpainel" element={<PainelAdmin />} />
-      </Routes>
-    </Router>
+    <div className="bg-dark-900 text-gray-100 overflow-x-hidden">
+      <ParticleBackground />
+      
+      {/* Progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-neon-purple to-neon-pink z-50"
+        style={{ scaleX: scrollYProgress }}
+        transformOrigin="0%"
+      />
+
+      <Navbar />
+      
+      <main>
+        <section id="hero">
+          <Hero />
+        </section>
+        
+        <section id="about">
+          <About />
+        </section>
+        
+        <section id="services">
+          <Services />
+        </section>
+        
+        <section id="portfolio">
+          <Portfolio />
+        </section>
+        
+        <section id="testimonials">
+          <Testimonials />
+        </section>
+        
+        <section id="pricing">
+          <CustomQuote />
+        </section>
+      </main>
+
+      <Footer />
+      
+      <WhatsAppButton />
+      <PromoModal isOpen={showPromoModal} onClose={handleCloseModal} />
+    </div>
   );
 }
 
